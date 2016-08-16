@@ -1,8 +1,5 @@
 "use strict";
 
-// [track_radius, via_radius, track_gap,
-// [[terminal_radius, terminal_gap, [x, y, z], [[x, y], ...]), ...]...],
-// [[x, y, z], ...]]
 var pcb_data =
 [
 [102,54,2],
@@ -92,98 +89,98 @@ var pcb = svg.append("g")
 //create layers, last layer is the terminals layer
 var layers = [];
 var layer_colors = ["red", "green", "blue", "yellow", "cyan", "magenta"];
-for (var l = 0; l < depth; ++l)
+for (var layer = 0; layer < depth; ++layer)
 {
 	layers.push(pcb.append("g")
-		.attr("stroke", layer_colors[l % depth])
+		.attr("stroke", layer_colors[layer % layer_colors.length])
 		.attr("stroke-opacity", 0.75));
 }
 layers.push(pcb.append("g")
 	.attr("stroke", "white"));
 
 //add tracks
-for (var t = 1; t < pcb_data.length; ++t)
+for (var track_num = 1; track_num < pcb_data.length; ++track_num)
 {
-	var tracks_radius = pcb_data[t][0];
-	var track = pcb_data[t][4];
-	for (var p = 0; p < track.length; ++p)
+	var track_radius = pcb_data[track_num][0];
+	var track = pcb_data[track_num][4];
+	for (var path = 0; path < track.length; ++path)
 	{
 		var start = 0;
-		var d = track[p][start][2];
-		for (var n = 1; n < track[p].length; ++n)
+		var d = track[path][start][2];
+		for (var node = 1; node < track[path].length; ++node)
 		{
-			if (track[p][n][2] === d) continue;
-			if (n - start > 1)
+			if (track[path][node][2] === d) continue;
+			if (node - start > 1)
 			{
 				layers[d].append("path")
-					.attr("stroke-width", tracks_radius * 2)
-					.attr("d", path_func(track[p].slice(start, n)));
+					.attr("stroke-width", track_radius * 2)
+					.attr("d", path_func(track[path].slice(start, node)));
 			}
-			start = n;
-			d = track[p][start][2];
+			start = node;
+			d = track[path][start][2];
 		}
-		if (n - start > 1)
+		if (node - start > 1)
 		{
 			layers[d].append("path")
-				.attr("stroke-width", tracks_radius * 2)
-				.attr("d", path_func(track[p].slice(start, n)));
+				.attr("stroke-width", track_radius * 2)
+				.attr("d", path_func(track[path].slice(start, node)));
 		}
 	}
 }
 
 //add terminals and vias
-for (var t = 1; t < pcb_data.length; ++t)
+for (var track_num = 1; track_num < pcb_data.length; ++track_num)
 {
-	var track_radius = pcb_data[t][0];
-	var via_radius = pcb_data[t][1];
-	var track_gap = pcb_data[t][2];
-	var terminals = pcb_data[t][3];
-	var track = pcb_data[t][4];
-	for (var term = 0; term < terminals.length; ++term)
+	var track_radius = pcb_data[track_num][0];
+	var via_radius = pcb_data[track_num][1];
+	var track_gap = pcb_data[track_num][2];
+	var terminals = pcb_data[track_num][3];
+	var track = pcb_data[track_num][4];
+	for (var terminal = 0; terminal < terminals.length; ++terminal)
 	{
-		var term_radius = terminals[term][0];
-		var term_gap = terminals[term][1];
-		var term_x = terminals[term][2][0];
-		var term_y = terminals[term][2][1];
-		var term_z = terminals[term][2][2];
-		var term_shape = terminals[term][3];
-		if (!term_shape.length)
+		var terminal_radius = terminals[terminal][0];
+		var terminal_gap = terminals[terminal][1];
+		var terminal_x = terminals[terminal][2][0];
+		var terminal_y = terminals[terminal][2][1];
+		var terminal_z = terminals[terminal][2][2];
+		var terminal_shape = terminals[terminal][3];
+		if (!terminal_shape.length)
 		{
 			layers[layers.length-1].append("circle")
-				.attr("cx", term_x)
-				.attr("cy", term_y)
-				.attr("r", term_radius)
+				.attr("cx", terminal_x)
+				.attr("cy", terminal_y)
+				.attr("r", terminal_radius)
 				.attr("fill", "white");
 		}
-		else if (term_shape.length === 2)
+		else if (terminal_shape.length === 2)
 		{
 			layers[layers.length-1].append("path")
-				.attr("stroke-width", term_radius * 2)
-				.attr("d", path_func(term_shape.map(
-					function(e){ return [e[0] + term_x, e[1] + term_y]; })));
+				.attr("stroke-width", terminal_radius * 2)
+				.attr("d", path_func(terminal_shape.map(
+					function(e){ return [e[0] + terminal_x, e[1] + terminal_y]; })));
 		}
 		else
 		{
 			layers[layers.length-1].append("path")
 				.attr("fill", "white")
-				.attr("d", path_func(term_shape.map(
-					function(e){ return [e[0] + term_x, e[1] + term_y]; })));
+				.attr("d", path_func(terminal_shape.map(
+					function(e){ return [e[0] + terminal_x, e[1] + terminal_y]; })));
 		}
 	}
-	for (var p = 0; p < track.length; ++p)
+	for (var path = 0; path < track.length; ++path)
 	{
-		var term_z = track[p][0][2];
-		for (var n = 1; n < track[p].length; ++n)
+		var terminal_z = track[path][0][2];
+		for (var node = 1; node < track[path].length; ++node)
 		{
-			if (term_z !== track[p][n][2])
+			if (terminal_z !== track[path][node][2])
 			{
 				layers[layers.length-1].append("circle")
-					.attr("cx", track[p][n][0])
-					.attr("cy", track[p][n][1])
+					.attr("cx", track[path][node][0])
+					.attr("cy", track[path][node][1])
 					.attr("r", via_radius)
 					.attr("fill", "white");
 			}
-			term_z = track[p][n][2];
+			terminal_z = track[path][node][2];
 		}
 	}
 }
