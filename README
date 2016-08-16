@@ -1,5 +1,5 @@
 JS-PCB By Chris Hinsley 2015
-===========================
+============================
 
 JavaScript PCB router and solver.
 
@@ -38,7 +38,7 @@ pcb:
 [track_radius, via_radius, track_gap, [terminal, terminal, ...]],
 ]
 
-Format of the viewer input is similar to the input but has the track paths appended:
+Format of the viewer input is similar to the pcb format but has the solved track paths appended:
 
 [
 [width, height, depth],
