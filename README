@@ -3,25 +3,46 @@ JS-PCB By Chris Hinsley 2015
 
 JavaScript PCB router and solver.
 
-Format of .pcb input data is:
+Format of PCB input data is:
+
+node_2d:
+
+[x, y]
+
+node_3d:
+
+[x, y, z]
+
+shape:
+
+[node_2d, node_2d, ...]
+
+path:
+
+[node_3d, node_3d, ...]
+
+terminal:
+
+[terminal_radius, terminal_gap, node_3d, shape]
+
+track:
+
+[path, path, ...]
+
+pcb:
 
 [
 [width, height, depth],
-[track_radius, via_radius, track_gap,
- 	[[terminal_radius, terminal_gap, [x, y, z], [[x, y], ...]), ...]...],
-[track_radius, via_radius, track_gap,
- 	[[terminal_radius, terminal_gap, [x, y, z], [[x, y], ...]), ...]...],
-[track_radius, via_radius, track_gap,
- 	[[terminal_radius, terminal_gap, [x, y, z], [[x, y], ...]), ...]...],
-[track_radius, via_radius, track_gap,
- 	[[terminal_radius, terminal_gap, [x, y, z], [[x, y], ...]), ...]...],
+[track_radius, via_radius, track_gap, [terminal, terminal, ...]],
+[track_radius, via_radius, track_gap, [terminal, terminal, ...]],
+[track_radius, via_radius, track_gap, [terminal, terminal, ...]],
 ]
 
-Format of the viewer input is similar but has the track paths appended:
+Format of the viewer input is similar to the input but has the track paths appended:
 
 [
 [width, height, depth],
-[track_radius, via_radius, track_gap,
- 	[[terminal_radius, terminal_gap, [x, y, z], [[x, y], ...]), ...]...],
- 	[[[x, y, z], ...], [[x, y, z], ...], [[x, y, z], ...], ...],
+[track_radius, via_radius, track_gap, [terminal, terminal, ...], [[path], [path], ...]],
+[track_radius, via_radius, track_gap, [terminal, terminal, ...], [[path], [path], ...]],
+[track_radius, via_radius, track_gap, [terminal, terminal, ...], [[path], [path], ...]],
 ]
