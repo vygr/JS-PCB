@@ -110,15 +110,21 @@ for (var t = 1; t < pcb_data.length; ++t)
 		for (var n = 1; n < track[p].length; ++n)
 		{
 			if (track[p][n][2] === d) continue;
-			layers[d].append("path")
-				.attr("stroke-width", tracks_radius * 2)
-				.attr("d", path_func(track[p].slice(start, n)));
+			if (n - start > 1)
+			{
+				layers[d].append("path")
+					.attr("stroke-width", tracks_radius * 2)
+					.attr("d", path_func(track[p].slice(start, n)));
+			}
 			start = n;
 			d = track[p][start][2];
 		}
-		layers[d].append("path")
-			.attr("stroke-width", tracks_radius * 2)
-			.attr("d", path_func(track[p].slice(start, n)));
+		if (n - start > 1)
+		{
+			layers[d].append("path")
+				.attr("stroke-width", tracks_radius * 2)
+				.attr("d", path_func(track[p].slice(start, n)));
+		}
 	}
 }
 
