@@ -94,9 +94,12 @@ var layers = [];
 var layer_colors = ["red", "green", "blue", "yellow", "cyan", "magenta"];
 for (var l = 0; l < depth; ++l)
 {
-	layers.push(pcb.append("g").attr("stroke", layer_colors[l % depth]));
+	layers.push(pcb.append("g")
+		.attr("stroke", layer_colors[l % depth])
+		.attr("stroke-opacity", 0.75));
 }
-layers.push(pcb.append("g").attr("stroke", "white"));
+layers.push(pcb.append("g")
+	.attr("stroke", "white"));
 
 //add tracks
 for (var t = 1; t < pcb_data.length; ++t)
