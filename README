@@ -3,24 +3,22 @@ JS-PCB By Chris Hinsley 2015
 
 JavaScript PCB router and solver.
 
-Format of PCB input data is:
+Format of PCB data is:
 
 NODE_2D		[x, y]
 NODE_3D		[x, y, z]
-SHAPE		[NODE_2D, NODE_2D, ...]
-PATH		[NODE_3D, NODE_3D, ...]
+SHAPE		[NODE_2D, ...]
+PATH		[NODE_3D, ...]
+PATHS		[PATH, ...]
 TERMINAL	[terminal_radius, terminal_gap, NODE_3D, SHAPE]
-PATHS		[PATH, PATH, ...]
-PCB			{dims: [width, height, depth],
-			tracks:
-			[[track_radius, via_radius, track_gap, [TERMINAL, TERMINAL, ...]],
-			[track_radius, via_radius, track_gap, [TERMINAL, TERMINAL, ...]],
-			[track_radius, via_radius, track_gap, [TERMINAL, TERMINAL, ...]]]}
+TERMINALS	[TERMINAL, ...]
+TRACK		[track_radius, via_radius, track_gap, TERMINALS, PATHS]
+TRACKS		[TRACK, ...]
+PCB			{dims: [width, height, depth], tracks: TRACKS}
 
-Format of the viewer input is similar to the pcb format but has the solved track paths appended:
+SHAPE can be empty, [], and this means a circular pad. Two points means an oval
+pad, otherwise the polygon shape of the pad.
 
-{dims: [width, height, depth],
-tracks:
-[[track_radius, via_radius, track_gap, [TERMINAL, TERMINAL, ...], PATHS],
-[track_radius, via_radius, track_gap, [TERMINAL, TERMINAL, ...], PATHS],
-[track_radius, via_radius, track_gap, [TERMINAL, TERMINAL, ...], PATHS]]}
+PATHS can be empty, [], this means no paths. If paths are empty on the input to
+the solver it means that this track needs solving, else the paths given
+represent protected wiring/paths and are to be routed around.
