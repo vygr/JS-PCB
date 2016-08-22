@@ -4,6 +4,8 @@
 // instance = [string m_name, string m_comp, string m_side, float m_x, float m_y, float m_angle]
 // circuit = [string m_via, rule m_rule]
 
+"use strict";
+
 function dsn2pcb(dsn, gap)
 {
 	var EOF = -1;
@@ -154,10 +156,7 @@ function dsn2pcb(dsn, gap)
 
 	function node3d_equal(n1, n2)
 	{
-		if (n1[0] !== n2[0]) return false;
-		if (n1[1] !== n2[1]) return false;
-		if (n1[2] !== n2[2]) return false;
-		return true;
+		return (n1[0] == n2[0] && n1[1] == n2[1] && n1[2] == n2[2]);
 	}
 
 	function terms_equal(t1, t2)
