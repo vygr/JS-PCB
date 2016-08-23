@@ -154,14 +154,9 @@ function dsn2pcb(dsn, gap)
 		return cords;
 	}
 
-	function node3d_equal(n1, n2)
-	{
-		return (n1[0] == n2[0] && n1[1] == n2[1] && n1[2] == n2[2]);
-	}
-
 	function terms_equal(t1, t2)
 	{
-		return node3d_equal(t1[2], t2[2]);
+		return equal_3d(t1[2], t2[2]);
 	}
 
 	function term_index(terms, term)
@@ -412,10 +407,7 @@ function dsn2pcb(dsn, gap)
 				var term = [pin_rule[0], pin_rule[1], tp, cords];
 				the_terminals.push(term);
 				var index = term_index(all_terminals, term);
-				if (index !== -1)
-				{
-			 		all_terminals.splice(index, 1);
-				}
+				if (index !== -1) all_terminals.splice(index, 1);
 			});
 			var circuit = circuit_map.get(network_node[1][0][0]);
 			var net_rule = circuit[1];

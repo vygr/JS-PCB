@@ -4,6 +4,8 @@
 		<meta charset="utf-8">
 		<title>JavaScript PCB solver: (C) Chris Hinsley 2016</title>
 		<script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+		<script type="text/javascript" src="mymath.js"></script>
+		<script type="text/javascript" src="layer.js"></script>
 		<script type="text/javascript" src="dsn2pcb.js"></script>
 		<script type="text/javascript" src="view.js"></script>
 		<style type="text/css">
@@ -11,12 +13,104 @@
 		</style>
 	</head>
 	<body>
-		<input type="file" id="files" name="files[]" accept=".dsn" single/><br>
-		<label for="border_gap">Border Gap:</label>
-		<input id="border_gap" type="number" min="1" max="5" step="1" value ="2"/><br>
-		<label for="scale">Scale:</label>
-		<input id="scale" type="number" min="1" max="20" step="1" value ="10"/><br>
-		<div></div>
+		<div>
+			<h2>DSN import settings</h2>
+			<table>
+				<tr>
+					<td align="right">
+						<label>Border Gap:</label>
+					</td>
+					<td>
+						<input id="border_gap" type="number" min="1" max="5" step="1" value ="2"/>
+					</td>
+					<td>
+						<input type="file" id="files" name="files[]" accept=".dsn" single/>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<h2>PCB routing settings</h2>
+			<table>
+				<tr>
+					<td align="right">
+						<label>Timeout:</label>
+					</td>
+					<td>
+						<input id="t" type="number" min="0" max="10000" step="1" value ="600"/>
+					</td>
+					<td align="right">
+						<label>Verbosity:</label>
+					</td>
+					<td>
+						<input id="v" type="number" min="0" max="1" step="1" value ="1"/>
+					</td>
+					<td align="right">
+						<label>Vias Cost:</label>
+					</td>
+					<td>
+						<input id="z" type="number" min="0" max="256" step="1" value ="0"/>
+					</td>
+					<td align="right">
+						<label>Samples:</label>
+					</td>
+					<td>
+						<input id="s" type="number" min="1" max="32" step="1" value ="1"/>
+					</td>
+					<td align="right">
+						<label>Grid Resolution:</label>
+					</td>
+					<td>
+						<input id="r" type="number" min="1" max="4" step="1" value ="1"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">
+						<label>Distance Metric:</label>
+					</td>
+					<td>
+						<input id="d" type="number" min="0" max="4" step="1" value ="0"/>
+					</td>
+					<td align="right">
+						<label>Quantization:</label>
+					</td>
+					<td>
+						<input id="q" type="number" min="0" max="64" step="1" value ="1"/>
+					</td>
+					<td align="right">
+						<label>Flood Range:</label>
+					</td>
+					<td>
+						<input id="fr" type="number" min="0" max="5" step="1" value ="2"/>
+					</td>
+					<td align="right">
+						<label>X Range:</label>
+					</td>
+					<td>
+						<input id="xr" type="number" min="0" max="5" step="1" value ="1"/>
+					</td>
+					<td align="right">
+						<label>Y Range:</label>
+					</td>
+					<td>
+						<input id="yr" type="number" min="0" max="5" step="1" value ="1"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<h2>PCB view settings</h2>
+			<table>
+				<tr>
+					<td align="right">
+						<label>Scale:</label>
+					</td>
+					<td>
+						<input id="scale" type="number" min="1" max="20" step="1" value ="10"/>
+					</td>
+				</tr>
+			</table>
+		</div>
 	</body>
 
 	<script type="text/javascript">
@@ -58,6 +152,13 @@
 
 	//register file selection handler
 	document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+	var l = new Layers([100, 100, 2], 1);
+	l.add_line([0.0, 0.0, 0], [100.0, 100.0, 0], 1.25, 0.25);
+	console.log(l.hit_line([0.0, 0.0, 0], [100.0, 100.0, 0], 1.25, 0.25));
+	console.log(l.hit_line([50.0, 60.0, 0], [80.0, 100.0, 0], 1.25, 0.25));
+	l.sub_line([0.0, 0.0, 0], [100.0, 100.0, 0], 1.25, 0.25);
+	console.log(l.hit_line([0.0, 0.0, 0], [100.0, 100.0, 0], 1.25, 0.25));
 
 	</script>
 </html>
