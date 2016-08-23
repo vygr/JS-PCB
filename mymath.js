@@ -68,14 +68,14 @@ function chebyshev_distance_3d(p1, p2)
 function reciprical_distance_2d(p1, p2)
 {
 	var d = manhattan_distance_2d(p1, p2);
-	if (d == 0.0) return 1.0;
+	if (d === 0.0) return 1.0;
 	return 1.0 / d;
 }
 
 function reciprical_distance_3d(p1, p2)
 {
 	var d = manhattan_distance_3d(p1, p2);
-	if (d == 0.0) return 1.0;
+	if (d === 0.0) return 1.0;
 	return 1.0 / d;
 }
 
@@ -85,12 +85,12 @@ function reciprical_distance_3d(p1, p2)
 
 function equal_2d(n1, n2)
 {
-	return (n1[0] == n2[0] && n1[1] == n2[1]);
+	return (n1[0] === n2[0] && n1[1] === n2[1]);
 }
 
 function equal_3d(n1, n2)
 {
-	return (n1[0] == n2[0] && n1[1] == n2[1] && n1[2] == n2[2]);
+	return (n1[0] === n2[0] && n1[1] === n2[1] && n1[2] === n2[2]);
 }
 
 function add_2d(p1, p2)
@@ -151,14 +151,14 @@ function length_3d(p)
 function norm_2d(p)
 {
 	var l = length_2d(p);
-	if (l == 0.0) return [0.0, 0.0];
+	if (l === 0.0) return [0.0, 0.0];
 	return scale_2d(p, 1.0 / l);
 }
 
 function norm_3d(p)
 {
 	var l = length_3d(p);
-	if (l == 0.0) return [0.0, 0.0, 0.0];
+	if (l === 0.0) return [0.0, 0.0, 0.0];
 	return scale_3d(p, 1.0 / l);
 }
 
@@ -203,7 +203,7 @@ function collide_lines_2d(l1_p1, l1_p2, l2_p1, l2_p2)
 	var axb = det_2d(av, bv);
 	var axc = det_2d(av, cv);
 	var cxb = det_2d(cv, bv);
-	if (axb == 0.0) return false;
+	if (axb === 0.0) return false;
 	if (axb > 0.0)
 	{
 		if ((axc < 0.0) || (axc > axb)) return false;
