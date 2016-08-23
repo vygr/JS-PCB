@@ -21,7 +21,7 @@ class Line
 
 function bucket_index(b, l)
 {
-	for (var i = 0; i < b.length; i++)
+	for (let i = 0; i < b.length; i++)
 	{
 		if (l.equal(b[i].m_line)) return i;
 	}
@@ -58,7 +58,7 @@ class Layer
 		this.m_scale = s;
 		this.m_test = 0;
 		this.m_buckets = [];
-		for (var i = 0; i < (this.m_height * this.m_width); ++i) this.m_buckets.push([]);
+		for (let i = 0; i < (this.m_height * this.m_width); ++i) this.m_buckets.push([]);
 	}
 
 	get_aabb(l)
@@ -89,9 +89,9 @@ class Layer
 	{
 		var bb = this.get_aabb(l);
 		var r = new Record(0, l);
-		for (var y = bb[1]; y <= bb[3]; ++y)
+		for (let y = bb[1]; y <= bb[3]; ++y)
 		{
-			for (var x = bb[0]; x <= bb[2]; ++x)
+			for (let x = bb[0]; x <= bb[2]; ++x)
 			{
 				this.m_buckets[y * this.m_width + x].push(r);
 			}
@@ -101,9 +101,9 @@ class Layer
 	sub_line(l)
 	{
 		var bb = this.get_aabb(l);
-		for (var y = bb[1]; y <= bb[3]; ++y)
+		for (let y = bb[1]; y <= bb[3]; ++y)
 		{
-			for (var x = bb[0]; x <= bb[2]; ++x)
+			for (let x = bb[0]; x <= bb[2]; ++x)
 			{
 				var b = this.m_buckets[y * this.m_width + x];
 				var index = bucket_index(b, l);
@@ -116,12 +116,12 @@ class Layer
 	{
 		this.m_test += 1;
 		var bb = this.get_aabb(l);
-		for (var y = bb[1]; y <= bb[3]; ++y)
+		for (let y = bb[1]; y <= bb[3]; ++y)
 		{
-			for (var x = bb[0]; x <= bb[2]; ++x)
+			for (let x = bb[0]; x <= bb[2]; ++x)
 			{
 				var b = this.m_buckets[y * this.m_width + x];
-				for (var i = 0; i < b.length; i++)
+				for (let i = 0; i < b.length; i++)
 				{
 					var record = b[i];
 					if (record.m_id === this.m_test) continue;
@@ -141,7 +141,7 @@ class Layers
 	{
 		this.m_depth = dims[2];
 		this.m_layers = [];
-		for (var z = 0; z < this.m_depth; ++z)
+		for (let z = 0; z < this.m_depth; ++z)
 			this.m_layers.push(new Layer([dims[0], dims[1]], s));
 	}
 
@@ -151,7 +151,7 @@ class Layers
 		var z2 = Math.trunc(p2[2]);
 		if (z1 > z2) var t = z1, z1 = z2, z2 = t;
 		var l = new Line([p1[0], p1[1]], [p2[0], p2[1]], r, g);
-		for (var z = z1; z <= z2; ++z) this.m_layers[z].add_line(l);
+		for (let z = z1; z <= z2; ++z) this.m_layers[z].add_line(l);
 	}
 
 	sub_line(p1, p2, r, g)
@@ -160,7 +160,7 @@ class Layers
 		var z2 = Math.trunc(p2[2]);
 		if (z1 > z2) var t = z1, z1 = z2, z2 = t;
 		var l = new Line([p1[0], p1[1]], [p2[0], p2[1]], r, g);
-		for (var z = z1; z <= z2; ++z) this.m_layers[z].sub_line(l);
+		for (let z = z1; z <= z2; ++z) this.m_layers[z].sub_line(l);
 	}
 
 	hit_line(p1, p2, r, g)
@@ -169,7 +169,7 @@ class Layers
 		var z2 = Math.trunc(p2[2]);
 		if (z1 > z2) var t = z1, z1 = z2, z2 = t;
 		var l = new Line([p1[0], p1[1]], [p2[0], p2[1]], r, g);
-		for (var z = z1; z <= z2; ++z) if (this.m_layers[z].hit_line(l)) return true;
+		for (let z = z1; z <= z2; ++z) if (this.m_layers[z].hit_line(l)) return true;
 		return false;
 	}
 }

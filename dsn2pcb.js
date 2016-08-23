@@ -119,7 +119,7 @@ function dsn2pcb(dsn, gap)
 	function search_tree(t, s)
 	{
 		if (t[0] === s) return t;
-		for (var i = 0; i < t[1].length; i++)
+		for (let i = 0; i < t[1].length; i++)
 		{
 			var st = search_tree(t[1][i], s);
 			if (st.length) return st;
@@ -161,7 +161,7 @@ function dsn2pcb(dsn, gap)
 
 	function term_index(terms, term)
 	{
-		for (var i = 0; i < terms.length; i++)
+		for (let i = 0; i < terms.length; i++)
 		{
 			if (terms_equal(terms[i], term)) return i;
 		}
@@ -184,7 +184,7 @@ function dsn2pcb(dsn, gap)
 			{
 				if (boundary_node[0] === "path")
 				{
-					for (var cords = 2; cords < boundary_node[1].length; cords += 2)
+					for (let cords = 2; cords < boundary_node[1].length; cords += 2)
 					{
 						var px = parseFloat(boundary_node[1][cords][0]) / 1000.0;
 						var py = parseFloat(boundary_node[1][cords+1][0]) / -1000.0;
@@ -207,7 +207,7 @@ function dsn2pcb(dsn, gap)
 		{
 			var component_name = library_node[1][0][0];
 			var the_comp = [component_name, new Map()];
-			for (var i = 1; i < library_node[1].length; ++i)
+			for (let i = 1; i < library_node[1].length; ++i)
 			{
 				var image_node = library_node[1][i];
 				if (image_node[0] === "pin")
@@ -236,7 +236,7 @@ function dsn2pcb(dsn, gap)
 		}
 		if (library_node[0] === "padstack")
 		{
-			for (var i = 1; i < library_node[1].length; ++i)
+			for (let i = 1; i < library_node[1].length; ++i)
 			{
 				var padstack_node = library_node[1][i];
 				if (padstack_node[0] === "shape")
@@ -294,7 +294,7 @@ function dsn2pcb(dsn, gap)
 		if (placement_node[0] === "component")
 		{
 			var component_name = placement_node[1][0][0];
-			for (var i = 1; i < placement_node[1].length; ++i)
+			for (let i = 1; i < placement_node[1].length; ++i)
 			{
 				var component_node = placement_node[1][i];
 				if (component_node[0] == "place")

@@ -32,7 +32,7 @@ function view_pcb(pcb_data, scale, margin)
 	//create layers, last layer is the terminals layer
 	var layers = [];
 	var layer_colors = ["red", "green", "blue", "yellow", "cyan", "magenta"];
-	for (var layer = 0; layer < depth; ++layer)
+	for (let layer = 0; layer < depth; ++layer)
 	{
 		layers.push(pcb.append("g")
 			.attr("stroke", layer_colors[layer % layer_colors.length])
@@ -50,7 +50,7 @@ function view_pcb(pcb_data, scale, margin)
 		{
 			var start = 0;
 			var d = path[start][2];
-			for (var node = 1; node < path.length; ++node)
+			for (let node = 1; node < path.length; ++node)
 			{
 				if (path[node][2] === d) continue;
 				if (node - start > 1)
@@ -113,7 +113,7 @@ function view_pcb(pcb_data, scale, margin)
 		paths.forEach(function(path)
 		{
 			var terminal_z = path[0][2];
-			for (var node = 1; node < path.length; ++node)
+			for (let node = 1; node < path.length; ++node)
 			{
 				if (terminal_z !== path[node][2])
 				{
