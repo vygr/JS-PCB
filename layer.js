@@ -10,7 +10,7 @@ class Line
 		this.m_gap = g;
 	}
 
-	equals(l)
+	equal(l)
 	{
 		return this.m_radius === l.m_radius
 				&& this.m_gap === l.m_gap
@@ -23,7 +23,7 @@ function bucket_index(b, l)
 {
 	for (var i = 0; i < b.length; i++)
 	{
-		if (l.equals(b[i].m_line)) return i;
+		if (l.equal(b[i].m_line)) return i;
 	}
 	return -1;
 }
