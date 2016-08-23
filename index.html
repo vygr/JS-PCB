@@ -153,12 +153,5 @@
 	//register file selection handler
 	document.getElementById('files').addEventListener('change', handleFileSelect, false);
 
-	var l = new Layers([100, 100, 2], 1);
-	l.add_line([0.0, 0.0, 0], [100.0, 100.0, 0], 1.25, 0.25);
-	console.log(l.hit_line([0.0, 0.0, 0], [100.0, 100.0, 0], 1.25, 0.25));
-	console.log(l.hit_line([50.0, 60.0, 0], [80.0, 100.0, 0], 1.25, 0.25));
-	l.sub_line([0.0, 0.0, 0], [100.0, 100.0, 0], 1.25, 0.25);
-	console.log(l.hit_line([0.0, 0.0, 0], [100.0, 100.0, 0], 1.25, 0.25));
-
 	</script>
 </html>
