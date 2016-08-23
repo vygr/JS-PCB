@@ -6,75 +6,75 @@
 
 function manhattan_distance_2d(p1, p2)
 {
-	var dx = p1[0] - p2[0];
-	var dy = p1[1] - p2[1];
+	let dx = p1[0] - p2[0];
+	let dy = p1[1] - p2[1];
 	return Math.abs(dx) + Math.abs(dy);
 }
 
 function manhattan_distance_3d(p1, p2)
 {
-	var dx = p1[0] - p2[0];
-	var dy = p1[1] - p2[1];
-	var dz = p1[2] - p2[2];
+	let dx = p1[0] - p2[0];
+	let dy = p1[1] - p2[1];
+	let dz = p1[2] - p2[2];
 	return Math.abs(dx) + Math.abs(dy) + Math.abs(dz);
 }
 
 function euclidean_distance_2d(p1, p2)
 {
-	var dx = p1[0] - p2[0];
-	var dy = p1[1] - p2[1];
+	let dx = p1[0] - p2[0];
+	let dy = p1[1] - p2[1];
 	return Math.sqrt(dx * dx + dy * dy);
 }
 
 function euclidean_distance_3d(p1, p2)
 {
-	var dx = p1[0] - p2[0];
-	var dy = p1[1] - p2[1];
-	var dz = p1[2] - p2[2];
+	let dx = p1[0] - p2[0];
+	let dy = p1[1] - p2[1];
+	let dz = p1[2] - p2[2];
 	return Math.sqrt(dx * dx + dy * dy + dz * dz);
 }
 
 function squared_euclidean_distance_2d(p1, p2)
 {
-	var dx = p1[0] - p2[0];
-	var dy = p1[1] - p2[1];
+	let dx = p1[0] - p2[0];
+	let dy = p1[1] - p2[1];
 	return dx * dx + dy * dy;
 }
 
 function squared_euclidean_distance_3d(p1, p2)
 {
-	var dx = p1[0] - p2[0];
-	var dy = p1[1] - p2[1];
-	var dz = p1[2] - p2[2];
+	let dx = p1[0] - p2[0];
+	let dy = p1[1] - p2[1];
+	let dz = p1[2] - p2[2];
 	return dx * dx + dy * dy + dz * dz;
 }
 
 function chebyshev_distance_2d(p1, p2)
 {
-	var dx = Math.abs(p1[0] - p2[0]);
-	var dy = Math.abs(p1[1] - p2[1]);
+	let dx = Math.abs(p1[0] - p2[0]);
+	let dy = Math.abs(p1[1] - p2[1]);
 	return Math.max(dx, dy);
 }
 
 function chebyshev_distance_3d(p1, p2)
 {
-	var dx = Math.abs(p1[0] - p2[0]);
-	var dy = Math.abs(p1[1] - p2[1]);
-	var dz = Math.abs(p1[2] - p2[2]);
-	var d = Math.max(dx, dy);
+	let dx = Math.abs(p1[0] - p2[0]);
+	let dy = Math.abs(p1[1] - p2[1]);
+	let dz = Math.abs(p1[2] - p2[2]);
+	let d = Math.max(dx, dy);
 	return Math.max(d, dz);
 }
 
 function reciprical_distance_2d(p1, p2)
 {
-	var d = manhattan_distance_2d(p1, p2);
+	let d = manhattan_distance_2d(p1, p2);
 	if (d === 0.0) return 1.0;
 	return 1.0 / d;
 }
 
 function reciprical_distance_3d(p1, p2)
 {
-	var d = manhattan_distance_3d(p1, p2);
+	let d = manhattan_distance_3d(p1, p2);
 	if (d === 0.0) return 1.0;
 	return 1.0 / d;
 }
@@ -150,14 +150,14 @@ function length_3d(p)
 
 function norm_2d(p)
 {
-	var l = length_2d(p);
+	let l = length_2d(p);
 	if (l === 0.0) return [0.0, 0.0];
 	return scale_2d(p, 1.0 / l);
 }
 
 function norm_3d(p)
 {
-	var l = length_3d(p);
+	let l = length_3d(p);
 	if (l === 0.0) return [0.0, 0.0, 0.0];
 	return scale_3d(p, 1.0 / l);
 }
@@ -169,40 +169,40 @@ function distance_2d(p1, p2)
 
 function distance_squared_2d(p1, p2)
 {
-	var p = sub_2d(p2, p1);
+	let p = sub_2d(p2, p1);
 	return dot_2d(p, p);
 }
 
 function distance_to_line_2d(p, p1, p2)
 {
-	var lv = sub_2d(p2, p1);
-	var pv = sub_2d(p, p1);
-	var c1 = dot_2d(pv, lv);
+	let lv = sub_2d(p2, p1);
+	let pv = sub_2d(p, p1);
+	let c1 = dot_2d(pv, lv);
 	if (c1 <= 0.0) return distance_2d(p, p1);
-	var c2 = dot_2d(lv, lv);
+	let c2 = dot_2d(lv, lv);
 	if (c2 <= c1) return distance_2d(p, p2);
 	return distance_2d(p, add_2d(p1, scale_2d(lv, c1/c2)));
 }
 
 function distance_squared_to_line_2d(p, p1, p2)
 {
-	var lv = sub_2d(p2, p1);
-	var pv = sub_2d(p, p1);
-	var c1 = dot_2d(pv, lv);
+	let lv = sub_2d(p2, p1);
+	let pv = sub_2d(p, p1);
+	let c1 = dot_2d(pv, lv);
 	if (c1 <= 0.0) return distance_squared_2d(p, p1);
-	var c2 = dot_2d(lv, lv);
+	let c2 = dot_2d(lv, lv);
 	if (c2 <= c1) return distance_squared_2d(p, p2);
 	return distance_squared_2d(p, add_2d(p1, scale_2d(lv, c1/c2)));
 }
 
 function collide_lines_2d(l1_p1, l1_p2, l2_p1, l2_p2)
 {
-	var av = sub_2d(l1_p2, l1_p1);
-	var bv = sub_2d(l2_p2, l2_p1);
-	var cv = sub_2d(l2_p2, l1_p1);
-	var axb = det_2d(av, bv);
-	var axc = det_2d(av, cv);
-	var cxb = det_2d(cv, bv);
+	let av = sub_2d(l1_p2, l1_p1);
+	let bv = sub_2d(l2_p2, l2_p1);
+	let cv = sub_2d(l2_p2, l1_p1);
+	let axb = det_2d(av, bv);
+	let axc = det_2d(av, cv);
+	let cxb = det_2d(cv, bv);
 	if (axb === 0.0) return false;
 	if (axb > 0.0)
 	{

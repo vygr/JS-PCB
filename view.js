@@ -3,17 +3,17 @@
 function view_pcb(pcb_data, scale, margin)
 {
 	//Width and height etc
-	var width = pcb_data['dims'][0];
-	var heigth = pcb_data['dims'][1];
-	var depth = pcb_data['dims'][2];
+	let width = pcb_data['dims'][0];
+	let heigth = pcb_data['dims'][1];
+	let depth = pcb_data['dims'][2];
 
-	var path_func = d3.line()
+	let path_func = d3.line()
 		.x(function(d) { return d[0]; })
 		.y(function(d) { return d[1]; });
 
 	//create/replace SVG element
-	var body = d3.select("body");
-	var svg = body.select("svg");
+	let body = d3.select("body");
+	let svg = body.select("svg");
 	if (svg) svg.remove();
 	svg = body.append("svg")
 		.attr("width", margin * scale * 2 + width * scale)
@@ -22,7 +22,7 @@ function view_pcb(pcb_data, scale, margin)
 		.attr("width", margin * scale * 2 + width * scale)
 		.attr("height", margin * scale * 2 + heigth * scale)
 		.attr("fill", "black");
-	var pcb = svg.append("g")
+	let pcb = svg.append("g")
 		.attr("transform", "scale(" + scale + "," + scale + ") translate(" + margin + "," + margin + ")")
 		.attr("stroke-linecap", "round")
 		.attr("stroke-linejoin", "round")
@@ -30,8 +30,8 @@ function view_pcb(pcb_data, scale, margin)
 		.attr("fill", "none");
 
 	//create layers, last layer is the terminals layer
-	var layers = [];
-	var layer_colors = ["red", "green", "blue", "yellow", "cyan", "magenta"];
+	let layers = [];
+	let layer_colors = ["red", "green", "blue", "yellow", "cyan", "magenta"];
 	for (let layer = 0; layer < depth; ++layer)
 	{
 		layers.push(pcb.append("g")
@@ -44,12 +44,12 @@ function view_pcb(pcb_data, scale, margin)
 	//add tracks
 	pcb_data['tracks'].forEach(function(track)
 	{
-		var track_radius = track[0];
-		var paths = track[4];
+		let track_radius = track[0];
+		let paths = track[4];
 		paths.forEach(function(path)
 		{
-			var start = 0;
-			var d = path[start][2];
+			let start = 0;
+			let d = path[start][2];
 			for (let node = 1; node < path.length; ++node)
 			{
 				if (path[node][2] === d) continue;
@@ -74,19 +74,19 @@ function view_pcb(pcb_data, scale, margin)
 	//add terminals and vias
 	pcb_data['tracks'].forEach(function(track)
 	{
-		var track_radius = track[0];
-		var via_radius = track[1];
-		var track_gap = track[2];
-		var terminals = track[3];
-		var paths = track[4];
+		let track_radius = track[0];
+		let via_radius = track[1];
+		let track_gap = track[2];
+		let terminals = track[3];
+		let paths = track[4];
 		terminals.forEach(function(terminal)
 		{
-			var terminal_radius = terminal[0];
-			var terminal_gap = terminal[1];
-			var terminal_x = terminal[2][0];
-			var terminal_y = terminal[2][1];
-			var terminal_z = terminal[2][2];
-			var terminal_shape = terminal[3];
+			let terminal_radius = terminal[0];
+			let terminal_gap = terminal[1];
+			let terminal_x = terminal[2][0];
+			let terminal_y = terminal[2][1];
+			let terminal_z = terminal[2][2];
+			let terminal_shape = terminal[3];
 			if (!terminal_shape.length)
 			{
 				layers[layers.length-1].append("circle")
@@ -112,7 +112,7 @@ function view_pcb(pcb_data, scale, margin)
 		});
 		paths.forEach(function(path)
 		{
-			var terminal_z = path[0][2];
+			let terminal_z = path[0][2];
 			for (let node = 1; node < path.length; ++node)
 			{
 				if (terminal_z !== path[node][2])

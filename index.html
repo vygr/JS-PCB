@@ -119,13 +119,13 @@
 	function handleOnLoad(evt)
 	{
 		//the onload get a string of the dsn file
-		var dsn = evt.target.result;
+		let dsn = evt.target.result;
 
 		//params
-		var gap = document.getElementById('border_gap').value;
-		var scale = document.getElementById('scale').value;
+		let gap = document.getElementById('border_gap').value;
+		let scale = document.getElementById('scale').value;
 
-		var pcb_data = dsn2pcb(dsn, gap);
+		let pcb_data = dsn2pcb(dsn, gap);
 		view_pcb(pcb_data, scale, 2);
 	}
 
@@ -133,14 +133,14 @@
 	function handleFileSelect(evt)
 	{
 		//filelist
-		var files = evt.target.files;
-		var f = files[0];
+		let files = evt.target.files;
+		let f = files[0];
 
 		//dsn files only.
 		if (f.name.match('.*[.]dsn'))
 		{
 			//file reader
-			var reader = new FileReader();
+			let reader = new FileReader();
 
 			//onload handler
 			reader.onload = handleOnLoad;
