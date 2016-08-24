@@ -112,46 +112,5 @@
 			</table>
 		</div>
 	</body>
-
-	<script type="text/javascript">
-
-	//file onload handler
-	function handleOnLoad(evt)
-	{
-		//the onload get a string of the dsn file
-		let dsn = evt.target.result;
-
-		//params
-		let gap = document.getElementById('border_gap').value;
-		let scale = document.getElementById('scale').value;
-
-		let pcb_data = dsn2pcb(dsn, gap);
-		view_pcb(pcb_data, scale, 2);
-	}
-
-	//file selection handler
-	function handleFileSelect(evt)
-	{
-		//filelist
-		let files = evt.target.files;
-		let f = files[0];
-
-		//dsn files only.
-		if (f.name.match('.*[.]dsn'))
-		{
-			//file reader
-			let reader = new FileReader();
-
-			//onload handler
-			reader.onload = handleOnLoad;
-
-			//read the dsn file
-			reader.readAsText(f);
-		}
-	}
-
-	//register file selection handler
-	document.getElementById('files').addEventListener('change', handleFileSelect, false);
-
-	</script>
+	<script type="text/javascript" src="main.js"></script>
 </html>
