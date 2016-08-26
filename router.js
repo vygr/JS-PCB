@@ -57,34 +57,35 @@ var js_pcb = js_pcb || {};
 	{
 		constructor(init)
 		{
-			this._data = [];
-			if (init === undefined) this.size = 0;
+			if (init === undefined)
+			{
+				this._data = new Map();
+			}
 			else
 			{
-				for (let n of init) { this._data.push(n); }
-				this.size = this._data.length;
+				this._data = new Map(init._data.entries());
 			}
+			this.size = this._data.size;
 		}
 
 		add(n)
 		{
-			if (!this.has(n))
+			let k = n.toString();
+			if (!this._data.has(k))
 			{
-				this._data.push(n);
+				this._data.set(k, n);
 				this.size += 1;
 			}
 		}
 
 		has(n)
 		{
-			return this._data.find(function(sn) { return js_pcb.equal_3d(n, sn); });
+			return this._data.has(n.toString());
 		}
 
 		[Symbol.iterator]()
 		{
-			var index = -1;
-			var data  = this._data;
-			return {next: () => ({ value: data[++index], done: !(index in data) })};
+			return this._data.values();
 		}
 	}
 
