@@ -31,7 +31,7 @@ function handleOnGo(evt)
 			if (event.data.length)
 			{
 				//view the pcb output
-				let scale = document.getElementById('scale').value;
+				let scale = +document.getElementById('scale').value;
 				js_pcb.view_pcb(event.data, scale, 2);
 			}
 		}, false);
