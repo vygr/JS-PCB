@@ -48,14 +48,14 @@ function pcb_thread(paramater_array)
 				js_pcb.reciprical_distance_3d];
 
 	//create pcb object and populate with tracks from input
-	let current_pcb = new Pcb(pcb_data[0], routing_flood_vectorss, routing_path_vectorss,
+	let current_pcb = new js_pcb.Pcb(pcb_data[0], routing_flood_vectorss, routing_path_vectorss,
 					dfuncs[arg_d], arg_r, arg_v, arg_q, arg_z);
 	for (let track of pcb_data[1]) current_pcb.add_track(track);
 
 	//run number of samples of solution and pick best one
-	postMessage(current_pcb.output_pcb());
+	let best_pcb = current_pcb.output_pcb();
+	postMessage(best_pcb);
 	let best_cost = 1000000000;
-	let best_pcb = current_pcb;
 	for (let i = 0; i < arg_s; ++i)
 	{
 		if (!current_pcb.route(arg_t))
@@ -67,10 +67,10 @@ function pcb_thread(paramater_array)
 		if (cost <= best_cost)
 		{
 			best_cost = cost;
-			best_pcb = current_pcb;
+			best_pcb = current_pcb.output_pcb();
 		}
 	}
-	postMessage(current_pcb.output_pcb());
+	postMessage(best_pcb);
 }
 
 //thread event listner
