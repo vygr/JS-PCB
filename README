@@ -22,3 +22,9 @@ pad, otherwise the polygon shape of the pad.
 PATHS can be empty, [], this means no paths. If paths are empty on the input to
 the solver it means that this track needs solving, else the paths given
 represent protected wiring/paths and are to be routed around.
+
+You can download the .dsn files and run the app by simply going to https://vygr.github.io/JS-PCB
+
+Enjoy.
+
+Chris
