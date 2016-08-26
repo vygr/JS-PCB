@@ -1,3 +1,21 @@
+//run pcb solver web worker thread, register output listner
+let worker = new Worker('worker.js');
+worker.addEventListener('message', function(event)
+{
+	if (event.data.length)
+	{
+		//view the pcb output
+		let scale = document.getElementById('scale').value;
+		js_pcb.view_pcb(event.data, scale, 2);
+	}
+	else
+	{
+		//finished
+		worker.terminate();
+		worker = undefined;
+	}
+}, false);
+
 //file onload handler
 function handleOnLoad(evt)
 {
@@ -5,11 +23,23 @@ function handleOnLoad(evt)
 	let dsn = evt.target.result;
 
 	//params
-	let gap = document.getElementById('border_gap').value;
-	let scale = document.getElementById('scale').value;
+	let arg_gap = +document.getElementById('border_gap').value;
+	let arg_t = +document.getElementById('t').value;
+	let arg_v = +document.getElementById('v').value;
+	let arg_s = +document.getElementById('s').value;
+	let arg_z = +document.getElementById('z').value;
+	let arg_r = +document.getElementById('r').value;
+	let arg_q = +document.getElementById('q').value;
+	let arg_d = +document.getElementById('d').value;
+	let arg_fr = +document.getElementById('fr').value;
+	let arg_xr = +document.getElementById('xr').value;
+	let arg_yr = +document.getElementById('yr').value;
 
-	let pcb_data = js_pcb.dsn2pcb(dsn, gap);
-	js_pcb.view_pcb(pcb_data, scale, 2);
+	//convert to pcb format
+	let pcb_data = js_pcb.dsn2pcb(dsn, arg_gap);
+
+	//post to solver thread
+	worker.postMessage([pcb_data, arg_t, arg_v, arg_s, arg_z, arg_r, arg_q, arg_d, arg_fr, arg_xr, arg_yr]);
 }
 
 //file selection handler
@@ -35,12 +65,3 @@ function handleFileSelect(evt)
 
 //register file selection handler
 document.getElementById('files').addEventListener('change', handleFileSelect, false);
-
-/*
-var test = new js_pcb.Layers([100, 100, 2], 1);
-test.add_line([0, 0, 0], [100, 100, 0], 1.25, 0.5);
-console.log(test.hit_line([0, 0, 0], [100, 100, 0], 1.25, 0.5));
-console.log(test.hit_line([0, 10, 0], [90, 100, 0], 1.25, 0.5));
-test.sub_line([0, 0, 0], [100, 100, 0], 1.25, 0.5);
-console.log(test.hit_line([0, 0, 0], [100, 100, 0], 1.25, 0.5));
-*/

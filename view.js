@@ -6,9 +6,8 @@ var js_pcb = js_pcb || {};
 	function view_pcb(pcb_data, scale, margin)
 	{
 		//Width and height etc
-		let width = pcb_data['dims'][0];
-		let heigth = pcb_data['dims'][1];
-		let depth = pcb_data['dims'][2];
+		let width, height, depth;
+		[width, height, depth] = pcb_data[0];
 
 		let path_func = d3.line()
 			.x(function(d) { return d[0]; })
@@ -20,10 +19,10 @@ var js_pcb = js_pcb || {};
 		if (svg) svg.remove();
 		svg = body.append("svg")
 			.attr("width", margin * scale * 2 + width * scale)
-			.attr("height", margin * scale * 2 + heigth * scale);
+			.attr("height", margin * scale * 2 + height * scale);
 		svg.append("rect")
 			.attr("width", margin * scale * 2 + width * scale)
-			.attr("height", margin * scale * 2 + heigth * scale)
+			.attr("height", margin * scale * 2 + height * scale)
 			.attr("fill", "black");
 		let pcb = svg.append("g")
 			.attr("transform", "scale(" + scale + "," + scale + ") translate(" + margin + "," + margin + ")")
@@ -45,15 +44,15 @@ var js_pcb = js_pcb || {};
 			.attr("stroke", "white"));
 
 		//add tracks
-		for (let track of pcb_data['tracks'])
+		for (let track of pcb_data[1])
 		{
 			let track_radius, paths;
 			[track_radius, , , , paths] = track;
 			for (let path of paths)
 			{
-				let start = 0;
+				let node, start = 0;
 				let d = path[start][2];
-				for (let node = 1; node < path.length; ++node)
+				for (node = 1; node < path.length; ++node)
 				{
 					if (path[node][2] === d) continue;
 					if (node - start > 1)
@@ -75,7 +74,7 @@ var js_pcb = js_pcb || {};
 		}
 
 		//add terminals and vias
-		for (let track of pcb_data['tracks'])
+		for (let track of pcb_data[1])
 		{
 			let track_radius, via_radius, track_gap, terminals, paths;
 			[track_radius, via_radius, track_gap, terminals, paths] = track;

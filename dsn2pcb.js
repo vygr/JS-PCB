@@ -429,10 +429,10 @@ var js_pcb = js_pcb || {};
 				terminal[2][1] -= (miny - gap);
 			}
 		}
-		return {dims: [Math.trunc(maxx - minx + (gap * 2) + 0.5),
-			 			Math.trunc(maxy - miny + (gap * 2) + 0.5),
-						num_layers],
-				tracks: the_tracks};
+		return [[Math.trunc(maxx - minx + (gap * 2) + 0.5),
+			 	Math.trunc(maxy - miny + (gap * 2) + 0.5),
+				num_layers],
+				the_tracks];
 	}
 
 	js_pcb.dsn2pcb = dsn2pcb;

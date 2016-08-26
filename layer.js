@@ -71,8 +71,8 @@ var js_pcb = js_pcb || {};
 			let x1, y1, x2, y2;
 			[x1, y1] = l.m_p1;
 			[x2, y2] = l.m_p2;
-			if (x1 > x2) {let t = x1, x1 = x2, x2 = t};
-			if (y1 > y2) {let t = y1, y1 = y2, y2 = t};
+			if (x1 > x2) {let t = x1; x1 = x2; x2 = t;}
+			if (y1 > y2) {let t = y1; y1 = y2; y2 = t;}
 			let r = l.m_radius + l.m_gap;
 			let minx = Math.trunc((x1 - r) * this.m_scale);
 			let miny = Math.trunc((y1 - r) * this.m_scale);
@@ -147,14 +147,14 @@ var js_pcb = js_pcb || {};
 			[w, h, d] = dims;
 			this.m_depth = d;
 			this.m_layers = [];
-			while (this.m_layers.push(new Layer([w, h], s)) < this.m_depth) {}
+			while (this.m_layers.push(new Layer([w, h], s)) < d) {}
 		}
 
 		add_line(p1, p2, r, g)
 		{
 			let z1 = Math.trunc(p1[2]);
 			let z2 = Math.trunc(p2[2]);
-			if (z1 > z2) {let t = z1, z1 = z2, z2 = t};
+			if (z1 > z2) {let t = z1; z1 = z2; z2 = t;}
 			let l = new Line([p1[0], p1[1]], [p2[0], p2[1]], r, g);
 			for (let z = z1; z <= z2; ++z) this.m_layers[z].add_line(l);
 		}
@@ -163,7 +163,7 @@ var js_pcb = js_pcb || {};
 		{
 			let z1 = Math.trunc(p1[2]);
 			let z2 = Math.trunc(p2[2]);
-			if (z1 > z2) {let t = z1, z1 = z2, z2 = t};
+			if (z1 > z2) {let t = z1; z1 = z2; z2 = t}
 			let l = new Line([p1[0], p1[1]], [p2[0], p2[1]], r, g);
 			for (let z = z1; z <= z2; ++z) this.m_layers[z].sub_line(l);
 		}
@@ -172,7 +172,7 @@ var js_pcb = js_pcb || {};
 		{
 			let z1 = Math.trunc(p1[2]);
 			let z2 = Math.trunc(p2[2]);
-			if (z1 > z2) {let t = z1, z1 = z2, z2 = t};
+			if (z1 > z2) {let t = z1; z1 = z2; z2 = t;}
 			let l = new Line([p1[0], p1[1]], [p2[0], p2[1]], r, g);
 			for (let z = z1; z <= z2; ++z) if (this.m_layers[z].hit_line(l)) return true;
 			return false;
