@@ -3,7 +3,7 @@
 Array.prototype.shuffle = function()
 {
 	let i = this.length, j, temp;
-	if (i === 0) return this;
+	if (i === 0) return;
 	while (--i)
 	{
 		j = Math.floor(Math.random() * (i + 1));
@@ -15,14 +15,6 @@ Array.prototype.shuffle = function()
 
 Array.prototype.move = function(old_index, new_index)
 {
-	if (new_index >= this.length)
-	{
-		var k = new_index - this.length;
-		while ((k--) + 1)
-		{
-			this.push(undefined);
-		}
-	}
 	this.splice(new_index, 0, this.splice(old_index, 1)[0]);
 }
 
@@ -510,7 +502,7 @@ var js_pcb = js_pcb || {};
 				{
 					let p0 = p1;
 					p1 = this.m_pcb.grid_to_space_point(path[i]);
-					if (path[i-1][2] !== path[i][2]) this.m_pcb.m_layers.add_line(p0, p1, this.m_via, this.m_gap);
+					if (path[i-1][2] !== path[i][2]) this.m_pcb.m_layers.sub_line(p0, p1, this.m_via, this.m_gap);
 					else this.m_pcb.m_layers.sub_line(p0, p1, this.m_radius, this.m_gap);
 				}
 			}
