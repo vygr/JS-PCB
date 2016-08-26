@@ -214,8 +214,8 @@ var js_pcb = js_pcb || {};
 		//convert grid node to space node
 		grid_to_space_point(n)
 		{
-			let p = this.m_deform.get(n);
-			if (p !== undefined) return p;
+//			let p = this.m_deform.get(n);
+//			if (p !== undefined) return p;
 			return n;
 		}
 
@@ -288,10 +288,7 @@ var js_pcb = js_pcb || {};
 				mn[0] = dfunc(pcb.grid_to_space_point(mn[1]), gp);
 				return true;
 			});
-			marked_nodes.sort(function(s1, s2)
-			{
-				return s1[0] - s2[0];
-			});
+			marked_nodes.sort(function(s1, s2) { return s1[0] - s2[0]; });
 			return marked_nodes.map(function(mn) { return mn[1]; });
 		}
 
@@ -311,7 +308,6 @@ var js_pcb = js_pcb || {};
 		//flood fill distances from starts till ends covered
 		mark_distances(vec, radius, via, gap, starts, ends)
 		{
-			let pcb = this;
 			let via_vectors = [[[0, 0, -1], [0, 0, 1]],
 							[[0, 0, -1], [0, 0, 1]]];
 			let distance = 1;
@@ -320,7 +316,7 @@ var js_pcb = js_pcb || {};
 			while (frontier.size || vias_nodes.size)
 			{
 				for (let node of frontier) this.set_node(node, distance);
-				if (ends.every(function(node) { return pcb.get_node(node);  })) break;
+				if (ends.every((node) => { return this.get_node(node); })) break;
 				let new_nodes = new NodeSet();
 				for (let node of frontier)
 				{
@@ -339,7 +335,7 @@ var js_pcb = js_pcb || {};
 						new_vias_nodes.add(new_node);
 					}
 				}
-				if (new_vias_nodes.size) vias_nodes[distance+this.m_viascost] = new_vias_nodes;
+				if (new_vias_nodes.size) vias_nodes.set(distance+this.m_viascost, new_vias_nodes);
 				let delay_nodes = vias_nodes.get(distance);
 				if (delay_nodes !== undefined)
 				{
