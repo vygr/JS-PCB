@@ -1,26 +1,26 @@
 "use strict";
 
-Array.prototype.shuffle = function()
-{
-	let i = this.length, j, temp;
-	if (i === 0) return;
-	while (--i)
-	{
-		j = Math.floor(Math.random() * (i + 1));
-		temp = this[i];
-		this[i] = this[j];
-		this[j] = temp;
-	}
-}
-
-Array.prototype.move = function(old_index, new_index)
-{
-	this.splice(new_index, 0, this.splice(old_index, 1)[0]);
-}
-
 var js_pcb = js_pcb || {};
 (function()
 {
+	Array.prototype.shuffle = function()
+	{
+		let i = this.length, j, temp;
+		if (i === 0) return;
+		while (--i)
+		{
+			j = Math.floor(Math.random() * (i + 1));
+			temp = this[i];
+			this[i] = this[j];
+			this[j] = temp;
+		}
+	}
+
+	Array.prototype.move = function(old_index, new_index)
+	{
+		this.splice(new_index, 0, this.splice(old_index, 1)[0]);
+	}
+
 	const spacial_hash_res = 0.75;
 
 	//aabb of terminals
@@ -49,14 +49,8 @@ var js_pcb = js_pcb || {};
 	{
 		constructor(init)
 		{
-			if (init === undefined)
-			{
-				this._data = new Map();
-			}
-			else
-			{
-				this._data = new Map(init._data.entries());
-			}
+			if (init === undefined) this._data = new Map();
+			else this._data = new Map(init._data.entries());
 			this.size = this._data.size;
 		}
 
@@ -103,7 +97,8 @@ var js_pcb = js_pcb || {};
 			this.m_deform = new Map();
 			this.m_netlist = [];
 			this.m_nodes = [];
-			while (this.m_nodes.push([]) < (this.m_stride * this.m_depth)) {}
+			while (this.m_nodes.push(0) < (this.m_stride * this.m_depth)) {}
+			this.m_via_vectors = [[[0, 0, -1], [0, 0, 1]], [[0, 0, -1], [0, 0, 1]]];
 		}
 
 		//add net
@@ -226,6 +221,10 @@ var js_pcb = js_pcb || {};
 		//generate all grid points surrounding node, that are not value 0
 		all_marked(vec, n)
 		{
+			let w = this.m_width;
+			let h = this.m_height;
+			let d = this.m_depth;
+			let gn = this.get_node;
 			let sort_nodes = [];
 			let x, y, z;
 			[x, y, z] = n;
@@ -234,12 +233,12 @@ var js_pcb = js_pcb || {};
 				let nx, ny, nz;
 				[nx, ny, nz] = v;
 				nx += x, ny += y, nz += z;
-				if ((0 <= nx) && (nx < this.m_width)
-				 	&& (0 <= ny) && (ny < this.m_height)
-					&& (0 <= nz) && (nz < this.m_depth))
+				if ((0 <= nx) && (nx < w)
+				 	&& (0 <= ny) && (ny < h)
+					&& (0 <= nz) && (nz < d))
 				{
 					let n = [nx, ny, nz];
-					let mark = this.get_node(n);
+					let mark = gn.call(this, n);
 					if (mark !== 0) sort_nodes.push([mark, n]);
 				}
 			}
@@ -249,6 +248,10 @@ var js_pcb = js_pcb || {};
 		//generate all grid points surrounding node, that are value 0
 		all_not_marked(vec, n)
 		{
+			let w = this.m_width;
+			let h = this.m_height;
+			let d = this.m_depth;
+			let gn = this.get_node;
 			let nodes = [];
 			let x, y, z;
 			[x, y, z] = n;
@@ -257,12 +260,12 @@ var js_pcb = js_pcb || {};
 				let nx, ny, nz;
 				[nx, ny, nz] = v;
 				nx += x, ny += y, nz += z;
-				if ((0 <= nx) && (nx < this.m_width)
-				 	&& (0 <= ny) && (ny < this.m_height)
-					&& (0 <= nz) && (nz < this.m_depth))
+				if ((0 <= nx) && (nx < w)
+				 	&& (0 <= ny) && (ny < h)
+					&& (0 <= nz) && (nz < d))
 				{
 					let n = [nx, ny, nz];
-					if (this.get_node(n) === 0) nodes.push(n);
+					if (gn.call(this, n) === 0) nodes.push(n);
 				}
 			}
 			return nodes;
@@ -271,13 +274,13 @@ var js_pcb = js_pcb || {};
 		//generate all grid points surrounding node sorted
 		all_nearer_sorted(vec, n, dfunc)
 		{
-			let pcb = this;
-			let gp = this.grid_to_space_point(n);
+			let gsp = this.grid_to_space_point;
+			let gp = gsp.call(this, n);
 			let distance = this.get_node(n);
-			let marked_nodes = this.all_marked(vec, n).filter(function(mn)
+			let marked_nodes = this.all_marked(vec, n).filter((mn) =>
 			{
 				if ((distance - mn[0]) <= 0) return false;
-				mn[0] = dfunc(pcb.grid_to_space_point(mn[1]), gp);
+				mn[0] = dfunc(gsp.call(this, mn[1]), gp);
 				return true;
 			});
 			marked_nodes.sort(function(s1, s2) { return s1[0] - s2[0]; });
@@ -287,12 +290,15 @@ var js_pcb = js_pcb || {};
 		//generate all grid points surrounding node that are not shorting with an existing track
 		all_not_shorting(gather, n, radius, gap)
 		{
+			let gsp = this.grid_to_space_point;
+			let layers = this.m_layers;
+			let hit_line = this.m_layers.hit_line;
 			let nodes = [];
-			let np = this.grid_to_space_point(n);
+			let np = gsp.call(this, n);
 			for (let new_node of gather)
 			{
-				let nnp = this.grid_to_space_point(new_node);
-				if (!this.m_layers.hit_line(np, nnp, radius, gap)) nodes.push(new_node);
+				let nnp = gsp.call(this, new_node);
+				if (!hit_line.call(layers, np, nnp, radius, gap)) nodes.push(new_node);
 			}
 			return nodes;
 		}
@@ -300,20 +306,22 @@ var js_pcb = js_pcb || {};
 		//flood fill distances from starts till ends covered
 		mark_distances(vec, radius, via, gap, starts, ends)
 		{
-			let via_vectors = [[[0, 0, -1], [0, 0, 1]],
-							[[0, 0, -1], [0, 0, 1]]];
+			let gn = this.get_node;
+			let sn = this.set_node;
+			let anm = this.all_not_marked;
+			let ans = this.all_not_shorting;
+			let via_vectors = this.m_via_vectors;
 			let distance = 1;
 			let frontier = new NodeSet(starts);
 			let vias_nodes = new Map();
 			while (frontier.size || vias_nodes.size)
 			{
-				for (let node of frontier) this.set_node(node, distance);
-				if (ends.every((node) => { return this.get_node(node); })) break;
+				for (let node of frontier) sn.call(this, node, distance);
+				if (ends.every((node) => { return gn.call(this, node); })) break;
 				let new_nodes = new NodeSet();
 				for (let node of frontier)
 				{
-					for (let new_node of this.all_not_shorting(
-						this.all_not_marked(vec, node), node, radius, gap))
+					for (let new_node of ans.call(this, anm.call(this, vec, node), node, radius, gap))
 					{
 						new_nodes.add(new_node);
 					}
@@ -321,8 +329,7 @@ var js_pcb = js_pcb || {};
 				let new_vias_nodes = new NodeSet();
 				for (let node of frontier)
 				{
-					for (let new_node of this.all_not_shorting(
-						this.all_not_marked(via_vectors, node), node, via, gap))
+					for (let new_node of ans.call(this, anm.call(this, via_vectors, node), node, via, gap))
 					{
 						new_vias_nodes.add(new_node);
 					}
@@ -331,7 +338,7 @@ var js_pcb = js_pcb || {};
 				let delay_nodes = vias_nodes.get(distance);
 				if (delay_nodes !== undefined)
 				{
-					for (let node of delay_nodes) if (this.get_node(node) === 0) new_nodes.add(node);
+					for (let node of delay_nodes) if (gn.call(this, node) === 0) new_nodes.add(node);
 					vias_nodes.delete(distance);
 				}
 				frontier = new_nodes;
@@ -546,8 +553,7 @@ var js_pcb = js_pcb || {};
 		//backtrack path from ends to starts
 		backtrack_path(visited, end_node, radius, via, gap)
 		{
-			let via_vectors = [[[0, 0, -1], [0, 0, 1]],
-							[[0, 0, -1], [0, 0, 1]]];
+			let via_vectors = this.m_pcb.m_via_vectors;
 			let path = [];
 			let path_node = end_node;
 			for (;;)

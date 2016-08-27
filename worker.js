@@ -41,8 +41,8 @@ function pcb_thread(paramater_array)
 			gen_vectors(path_range, path_range, path_range_y_odd_layer)];
 
 	//choose distance metric function
-	let dfuncs = [js_pcb.manhattan_distance_3d,
-				js_pcb.squared_euclidean_distance_3d,
+	let dfuncs = [js_pcb.squared_euclidean_distance_3d,
+				js_pcb.manhattan_distance_3d,
 				js_pcb.euclidean_distance_3d,
 				js_pcb.chebyshev_distance_3d,
 				js_pcb.reciprical_distance_3d];
