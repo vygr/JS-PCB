@@ -21,8 +21,8 @@ function pcb_thread(paramater_array)
 	}
 
 	//args
-	let pcb_data, arg_t, arg_v, arg_s, arg_z, arg_r, arg_q, arg_d, arg_fr, arg_xr, arg_yr;
-	[pcb_data, arg_t, arg_v, arg_s, arg_z, arg_r, arg_q, arg_d, arg_fr, arg_xr, arg_yr] = paramater_array;
+	let pcd_data, arg_t, arg_v, arg_s, arg_z, arg_r, arg_q, arg_d, arg_fr, arg_xr, arg_yr;
+	[pcd_data, arg_t, arg_v, arg_s, arg_z, arg_r, arg_q, arg_d, arg_fr, arg_xr, arg_yr] = paramater_array;
 
 	//create flooding and backtracking vectors
 	let flood_range = arg_fr;

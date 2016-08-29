@@ -5,9 +5,8 @@
 		<title>JavaScript PCB solver: (C) Chris Hinsley 2016</title>
 		<script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
 		<script type="text/javascript" src="mymath.js"></script>
-		<script type="text/javascript" src="layer.js"></script>
-		<script type="text/javascript" src="dsn2pcb.js"></script>
 		<script type="text/javascript" src="view.js"></script>
+		<script type="text/javascript" src="dsn2pcb.js"></script>
 		<style type="text/css">
 			/* No style rules here yet */
 		</style>
@@ -21,7 +20,7 @@
 						<label>Border Gap:</label>
 					</td>
 					<td>
-						<input id="border_gap" type="number" min="1" max="5" step="1" value ="2"/>
+						<input id="arg_g" type="number" min="1" max="5" step="1" value ="2"/>
 					</td>
 					<td>
 						<input type="file" id="files" name="files[]" accept=".dsn" single/>
@@ -37,31 +36,31 @@
 						<label>Timeout:</label>
 					</td>
 					<td>
-						<input id="t" type="number" min="0" max="10000" step="1" value ="600"/>
+						<input id="arg_t" type="number" min="0" max="10000" step="1" value ="600"/>
 					</td>
 					<td align="right">
 						<label>Verbosity:</label>
 					</td>
 					<td>
-						<input id="v" type="number" min="0" max="1" step="1" value ="1"/>
+						<input id="arg_v" type="number" min="0" max="1" step="1" value ="1"/>
 					</td>
 					<td align="right">
 						<label>Vias Cost:</label>
 					</td>
 					<td>
-						<input id="z" type="number" min="0" max="256" step="1" value ="0"/>
+						<input id="arg_z" type="number" min="0" max="256" step="1" value ="0"/>
 					</td>
 					<td align="right">
 						<label>Samples:</label>
 					</td>
 					<td>
-						<input id="s" type="number" min="1" max="32" step="1" value ="1"/>
+						<input id="arg_s" type="number" min="1" max="32" step="1" value ="1"/>
 					</td>
 					<td align="right">
 						<label>Grid Resolution:</label>
 					</td>
 					<td>
-						<input id="r" type="number" min="1" max="4" step="1" value ="1"/>
+						<input id="arg_r" type="number" min="1" max="4" step="1" value ="1"/>
 					</td>
 				</tr>
 				<tr>
@@ -69,31 +68,31 @@
 						<label>Distance Metric:</label>
 					</td>
 					<td>
-						<input id="d" type="number" min="0" max="4" step="1" value ="0"/>
+						<input id="arg_d" type="number" min="0" max="4" step="1" value ="0"/>
 					</td>
 					<td align="right">
 						<label>Quantization:</label>
 					</td>
 					<td>
-						<input id="q" type="number" min="0" max="64" step="1" value ="1"/>
+						<input id="arg_q" type="number" min="0" max="64" step="1" value ="1"/>
 					</td>
 					<td align="right">
 						<label>Flood Range:</label>
 					</td>
 					<td>
-						<input id="fr" type="number" min="0" max="5" step="1" value ="2"/>
+						<input id="arg_fr" type="number" min="0" max="5" step="1" value ="2"/>
 					</td>
 					<td align="right">
 						<label>X Range:</label>
 					</td>
 					<td>
-						<input id="xr" type="number" min="0" max="5" step="1" value ="1"/>
+						<input id="arg_xr" type="number" min="0" max="5" step="1" value ="1"/>
 					</td>
 					<td align="right">
 						<label>Y Range:</label>
 					</td>
 					<td>
-						<input id="yr" type="number" min="0" max="5" step="1" value ="1"/>
+						<input id="arg_yr" type="number" min="0" max="5" step="1" value ="1"/>
 					</td>
 				</tr>
 			</table>

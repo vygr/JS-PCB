@@ -8,20 +8,17 @@ function handleOnGo(evt)
 	if (file !== null)
 	{
 		//params
-		let arg_gap = +document.getElementById('border_gap').value;
-		let arg_t = +document.getElementById('t').value;
-		let arg_v = +document.getElementById('v').value;
-		let arg_s = +document.getElementById('s').value;
-		let arg_z = +document.getElementById('z').value;
-		let arg_r = +document.getElementById('r').value;
-		let arg_q = +document.getElementById('q').value;
-		let arg_d = +document.getElementById('d').value;
-		let arg_fr = +document.getElementById('fr').value;
-		let arg_xr = +document.getElementById('xr').value;
-		let arg_yr = +document.getElementById('yr').value;
-
-		//convert to pcb format
-		let pcb_data = js_pcb.dsn2pcb(file, arg_gap);
+		let arg_g = +document.getElementById('arg_g').value;
+		let arg_t = +document.getElementById('arg_t').value;
+		let arg_v = +document.getElementById('arg_v').value;
+		let arg_s = +document.getElementById('arg_s').value;
+		let arg_z = +document.getElementById('arg_z').value;
+		let arg_r = +document.getElementById('arg_r').value;
+		let arg_q = +document.getElementById('arg_q').value;
+		let arg_d = +document.getElementById('arg_d').value;
+		let arg_fr = +document.getElementById('arg_fr').value;
+		let arg_xr = +document.getElementById('arg_xr').value;
+		let arg_yr = +document.getElementById('arg_yr').value;
 
 		//run pcb solver web worker thread, register output listner
 		if (worker !== null) worker.terminate();
@@ -37,7 +34,8 @@ function handleOnGo(evt)
 		}, false);
 
 		//post to solver thread
-		worker.postMessage([pcb_data, arg_t, arg_v, arg_s, arg_z, arg_r, arg_q, arg_d, arg_fr, arg_xr, arg_yr]);
+		worker.postMessage([js_pcb.dsn2pcb(file, arg_g),
+			 				arg_t, arg_v, arg_s, arg_z, arg_r, arg_q, arg_d, arg_fr, arg_xr, arg_yr]);
 	}
 }
 

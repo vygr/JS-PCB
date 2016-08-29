@@ -201,8 +201,11 @@ var js_pcb = js_pcb || {};
 		//convert grid node to space node
 		grid_to_space_point(n)
 		{
-//			let p = this.m_deform.get(n);
-//			if (p !== undefined) return p;
+			let p = this.m_deform.get(n.toString());
+			if (p !== undefined)
+			{
+				return p;
+			}
 			return n;
 		}
 
@@ -422,7 +425,7 @@ var js_pcb = js_pcb || {};
 				{
 					let p = [Math.trunc(term[2][0] + 0.5), Math.trunc(term[2][1] + 0.5), z];
 					let sp = [term[2][0], term[2][1], z];
-					pcb.m_deform.set(p, sp);
+					pcb.m_deform.set(p.toString(), sp);
 				}
 			}
 		}
@@ -633,6 +636,8 @@ var js_pcb = js_pcb || {};
 		//output net, terminals and paths, for viewer app
 		output_net()
 		{
+			let pcb = this.m_pcb;
+			let gsp = this.m_pcb.grid_to_space_point;
 			let scale = 1.0 / this.m_pcb.m_resolution;
 			let track = [];
 			track.push(this.m_radius*scale);
@@ -645,7 +650,11 @@ var js_pcb = js_pcb || {};
 			}));
 			track.push(this.m_paths.map(function(path)
 			{
-				return path.map(function(n) { return [n[0]*scale, n[1]*scale, n[2]]; });
+				return path.map(function(n)
+				{
+					let p = gsp.call(pcb, n);
+					return [p[0]*scale, p[1]*scale, p[2]];
+				});
 			}));
 			return track;
 		}
