@@ -96,8 +96,7 @@ var js_pcb = js_pcb || {};
 			this.m_layers = new js_pcb.Layers([Math.trunc(w * spacial_hash_res), Math.trunc(h * spacial_hash_res), d], spacial_hash_res / res);
 			this.m_deform = new Map();
 			this.m_netlist = [];
-			this.m_nodes = [];
-			while (this.m_nodes.push(0) < (this.m_stride * this.m_depth)) {}
+			this.m_nodes = new Uint32Array(this.m_stride * this.m_depth);
 			this.m_via_vectors = [[[0, 0, -1], [0, 0, 1]], [[0, 0, -1], [0, 0, 1]]];
 		}
 
