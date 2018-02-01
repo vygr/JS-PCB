@@ -292,6 +292,7 @@ var js_pcb = js_pcb || {};
 								let y1 = parseFloat(padstack_node[1][0][1][i + 1][0]) / -1000.0;
 								points.push([x1, y1]);
 							}
+							points.push(points[0]);
 						}
 						the_rule[2] = points;
 						rule_map.set(library_node[1][0][0], the_rule);
