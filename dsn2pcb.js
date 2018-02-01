@@ -374,7 +374,7 @@ var js_pcb = js_pcb || {};
 							}
 						}
 					}
-					if (class_node[0] === "circuit")
+					else if (class_node[0] === "circuit")
 					{
 						for (let circuit_node of class_node[1])
 						{
