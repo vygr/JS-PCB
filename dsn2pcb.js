@@ -398,34 +398,40 @@ var js_pcb = js_pcb || {};
 		{
 			if (network_node[0] == "net")
 			{
-				let the_terminals = [];
-				for (let p of network_node[1][1][1])
+				for (let net_node of network_node[1])
 				{
-					let pin_info = p[0].split('-');
-					let instance_name = pin_info[0];
-					let pin_name = pin_info[1];
-					let instance = instance_map.get(instance_name);
-					let component = component_map.get(instance[1]);
-					let pin = component[1].get(pin_name);
-					let m_x = pin[2];
-					let m_y = pin[3];
-					if (instance[2] !== "front") m_x = -m_x;
-					let s = Math.sin(instance[5]);
-					let c = Math.cos(instance[5]);
-					let px = (c * m_x - s * m_y) + instance[3];
-					let py = (s * m_x + c * m_y) + instance[4];
-					let pin_rule = rule_map.get(pin[1]);
-					let tp = [px, py, 0.0];
-					let cords = shape_to_cords(pin_rule[2], pin[4], instance[5]);
-					let term = [pin_rule[0], pin_rule[1], tp, cords];
-					the_terminals.push(term);
-					let index = term_index(all_terminals, term);
-					if (index !== -1) all_terminals.splice(index, 1);
+					if (net_node[0] == "pins")
+					{
+						let the_terminals = [];
+						for (let p of net_node[1])
+						{
+							let pin_info = p[0].split('-');
+							let instance_name = pin_info[0];
+							let pin_name = pin_info[1];
+							let instance = instance_map.get(instance_name);
+							let component = component_map.get(instance[1]);
+							let pin = component[1].get(pin_name);
+							let m_x = pin[2];
+							let m_y = pin[3];
+							if (instance[2] !== "front") m_x = -m_x;
+							let s = Math.sin(instance[5]);
+							let c = Math.cos(instance[5]);
+							let px = (c * m_x - s * m_y) + instance[3];
+							let py = (s * m_x + c * m_y) + instance[4];
+							let pin_rule = rule_map.get(pin[1]);
+							let tp = [px, py, 0.0];
+							let cords = shape_to_cords(pin_rule[2], pin[4], instance[5]);
+							let term = [pin_rule[0], pin_rule[1], tp, cords];
+							the_terminals.push(term);
+							let index = term_index(all_terminals, term);
+							if (index !== -1) all_terminals.splice(index, 1);
+						}
+						let circuit = circuit_map.get(network_node[1][0][0]);
+						let net_rule = circuit[1];
+						let via_rule = rule_map.get(circuit[0]);
+						the_tracks.push([net_rule[0], via_rule[0], net_rule[1], the_terminals, []]);
+					}
 				}
-				let circuit = circuit_map.get(network_node[1][0][0]);
-				let net_rule = circuit[1];
-				let via_rule = rule_map.get(circuit[0]);
-				the_tracks.push([net_rule[0], via_rule[0], net_rule[1], the_terminals, []]);
 			}
 		}
 		the_tracks.push([0.0, 0.0, 0.0, all_terminals, []]);
