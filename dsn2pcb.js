@@ -250,7 +250,7 @@ var js_pcb = js_pcb || {};
 						{
 							the_rule[0] = parseFloat(padstack_node[1][0][1][1][0]) / 2000.0;
 						}
-						if (padstack_node[1][0][0] === "path")
+						else if (padstack_node[1][0][0] === "path")
 						{
 							the_rule[0] = parseFloat(padstack_node[1][0][1][1][0]) / 2000.0;
 							let x1 = parseFloat(padstack_node[1][0][1][2][0]);
@@ -270,7 +270,7 @@ var js_pcb = js_pcb || {};
 								points.push([x2, y2]);
 							}
 						}
-						if (library_node[1][1][1][0][0] === "rect")
+						else if (padstack_node[1][0][0] === "rect")
 						{
 							the_rule[0] = 0.0;
 							let x1 = parseFloat(padstack_node[1][0][1][1][0]) / 1000.0;
@@ -282,6 +282,16 @@ var js_pcb = js_pcb || {};
 							points.push([x2, y2]);
 							points.push([x1, y2]);
 							points.push([x1, y1]);
+						}
+						else if (padstack_node[1][0][0] === "polygon")
+						{
+							the_rule[0] = 0.0;
+							for (let i = 2; i < padstack_node[1][0][1].length; i += 2)
+							{
+								let x1 = parseFloat(padstack_node[1][0][1][i][0]) / 1000.0;
+								let y1 = parseFloat(padstack_node[1][0][1][i + 1][0]) / -1000.0;
+								points.push([x1, y1]);
+							}
 						}
 						the_rule[2] = points;
 						rule_map.set(library_node[1][0][0], the_rule);
