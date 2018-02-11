@@ -173,15 +173,41 @@ var js_pcb = js_pcb || {};
 
 		let tree = read_tree(stream);
 		let structure_root = search_tree(tree, "structure");
+		const units = 1000.0;
 		let num_layers = 0;
 		let minx = 1000000.0;
 		let miny = 1000000.0;
 		let maxx = -1000000.0;
 		let maxy = -1000000.0;
+		let default_rule = [0.25, 0.25, []];
+		let default_via = "Via[0-1]_600:400_um";
 		for (let structure_node of structure_root[1])
 		{
 			if (structure_node[0] === "layer") num_layers++;
-			if (structure_node[0] === "boundary")
+			else if (structure_node[0] === "via")
+			{
+				for (let via_node of structure_node[1])
+				{
+					default_via = via_node[0];
+				}
+			}
+			else if (structure_node[0] === "rule")
+			{
+				for (let rule_node of structure_node[1])
+				{
+					if (rule_node[0] === "width")
+					{
+						default_rule[0] = parseFloat(rule_node[1][0]) / (2 * units);
+					}
+					else if ((rule_node[0] === "clear"
+							|| rule_node[0] === "clearance")
+							&& rule_node[1].length == 1)
+					{
+						default_rule[1] = parseFloat(rule_node[1][0]) / (2 * units);
+					}
+				}
+			}
+			else if (structure_node[0] === "boundary")
 			{
 				for (let boundary_node of structure_node[1])
 				{
@@ -189,13 +215,28 @@ var js_pcb = js_pcb || {};
 					{
 						for (let cords = 2; cords < boundary_node[1].length; cords += 2)
 						{
-							let px = parseFloat(boundary_node[1][cords][0]) / 1000.0;
-							let py = parseFloat(boundary_node[1][cords+1][0]) / -1000.0;
+							let px = parseFloat(boundary_node[1][cords][0]) / units;
+							let py = parseFloat(boundary_node[1][cords+1][0]) / -units;
 							minx = Math.min(px, minx);
 							maxx = Math.max(px, maxx);
 							miny = Math.min(py, miny);
 							maxy = Math.max(py, maxy);
 						}
+					}
+					else if (boundary_node[0] === "rect")
+					{
+						let x1 = parseFloat(boundary_node[1][1]) / units;
+						let y1 = parseFloat(boundary_node[1][2]) / -units;
+						let x2 = parseFloat(boundary_node[1][3]) / units;
+						let y2 = parseFloat(boundary_node[1][4]) / -units;
+						minx = Math.min(x1, minx);
+						maxx = Math.max(x1, maxx);
+						miny = Math.min(y1, miny);
+						maxy = Math.max(y1, maxy);
+						minx = Math.min(x2, minx);
+						maxx = Math.max(x2, maxx);
+						miny = Math.min(y2, miny);
+						maxy = Math.max(y2, maxy);
 					}
 				}
 			}
@@ -230,14 +271,14 @@ var js_pcb = js_pcb || {};
 							the_pin[3] = parseFloat(image_node[1][3][0]);
 							the_pin[4] = 0.0;
 						}
-						the_pin[2] /= 1000.0;
-						the_pin[3] /= -1000.0;
+						the_pin[2] /= units;
+						the_pin[3] /= -units;
 						the_comp[1].set(the_pin[0], the_pin);
 					}
 				}
 				component_map.set(component_name, the_comp);
 			}
-			if (library_node[0] === "padstack")
+			else if (library_node[0] === "padstack")
 			{
 				for (let i = 1; i < library_node[1].length; ++i)
 				{
@@ -245,14 +286,14 @@ var js_pcb = js_pcb || {};
 					if (padstack_node[0] === "shape")
 					{
 						let points = [];
-						let the_rule = [0.5, 0.125, []];
+						let the_rule = default_rule.slice();
 						if (padstack_node[1][0][0] === "circle")
 						{
-							the_rule[0] = parseFloat(padstack_node[1][0][1][1][0]) / 2000.0;
+							the_rule[0] = parseFloat(padstack_node[1][0][1][1][0]) / (2 * units);
 						}
 						else if (padstack_node[1][0][0] === "path")
 						{
-							the_rule[0] = parseFloat(padstack_node[1][0][1][1][0]) / 2000.0;
+							the_rule[0] = parseFloat(padstack_node[1][0][1][1][0]) / (2 * units);
 							let x1 = parseFloat(padstack_node[1][0][1][2][0]);
 							let y1 = parseFloat(padstack_node[1][0][1][3][0]);
 							let x2 = parseFloat(padstack_node[1][0][1][4][0]);
@@ -262,10 +303,10 @@ var js_pcb = js_pcb || {};
 								|| y1 != 0.0
 								|| y2 != 0.0)
 							{
-								x1 /= 1000.0;
-								y1 /= -1000.0;
-								x2 /= 1000.0;
-								y2 /= -1000.0;
+								x1 /= units;
+								y1 /= -units;
+								x2 /= units;
+								y2 /= -units;
 								points.push([x1, y1]);
 								points.push([x2, y2]);
 							}
@@ -273,10 +314,10 @@ var js_pcb = js_pcb || {};
 						else if (padstack_node[1][0][0] === "rect")
 						{
 							the_rule[0] = 0.0;
-							let x1 = parseFloat(padstack_node[1][0][1][1][0]) / 1000.0;
-							let y1 = parseFloat(padstack_node[1][0][1][2][0]) / -1000.0;
-							let x2 = parseFloat(padstack_node[1][0][1][3][0]) / 1000.0;
-							let y2 = parseFloat(padstack_node[1][0][1][4][0]) / -1000.0;
+							let x1 = parseFloat(padstack_node[1][0][1][1][0]) / units;
+							let y1 = parseFloat(padstack_node[1][0][1][2][0]) / -units;
+							let x2 = parseFloat(padstack_node[1][0][1][3][0]) / units;
+							let y2 = parseFloat(padstack_node[1][0][1][4][0]) / -units;
 							points.push([x1, y1]);
 							points.push([x2, y1]);
 							points.push([x2, y2]);
@@ -288,8 +329,8 @@ var js_pcb = js_pcb || {};
 							the_rule[0] = 0.0;
 							for (let i = 2; i < padstack_node[1][0][1].length; i += 2)
 							{
-								let x1 = parseFloat(padstack_node[1][0][1][i][0]) / 1000.0;
-								let y1 = parseFloat(padstack_node[1][0][1][i + 1][0]) / -1000.0;
+								let x1 = parseFloat(padstack_node[1][0][1][i][0]) / units;
+								let y1 = parseFloat(padstack_node[1][0][1][i + 1][0]) / -units;
 								points.push([x1, y1]);
 							}
 							points.push(points[0]);
@@ -318,8 +359,8 @@ var js_pcb = js_pcb || {};
 						the_instance[0] = instance_name;
 						the_instance[1] = component_name;
 						the_instance[2] = component_node[1][3][0];
-						the_instance[3] = parseFloat(component_node[1][1][0]) / 1000.0;
-						the_instance[4] = parseFloat(component_node[1][2][0]) / -1000.0;
+						the_instance[3] = parseFloat(component_node[1][1][0]) / units;
+						the_instance[4] = parseFloat(component_node[1][2][0]) / -units;
 						the_instance[5] = parseFloat(component_node[1][4][0]) * -(Math.PI / 180.0);
 						instance_map.set(instance_name, the_instance);
 					}
@@ -357,8 +398,7 @@ var js_pcb = js_pcb || {};
 		{
 			if (network_node[0] === "class")
 			{
-				let net_rule = [0.125, 0.125, []];
-				let the_circuit = ['', []];
+				let the_circuit = [default_via, default_rule.slice()];
 				for (let class_node of network_node[1])
 				{
 					if (class_node[0] === "rule")
@@ -367,11 +407,11 @@ var js_pcb = js_pcb || {};
 						{
 							if (dims[0] === "width")
 							{
-								net_rule[0] = parseFloat(dims[1][0][0]) / 2000.0;
+								the_circuit[1][0] = parseFloat(dims[1][0][0]) / (2 * units);
 							}
 							if (dims[0] === "clearance")
 							{
-								net_rule[1] = parseFloat(dims[1][0][0]) / 2000.0;
+								the_circuit[1][1] = parseFloat(dims[1][0][0]) / (2 * units);
 							}
 						}
 					}
@@ -386,7 +426,6 @@ var js_pcb = js_pcb || {};
 						}
 					}
 				}
-				the_circuit[1] = net_rule;
 				for (let netname of network_node[1])
 				{
 					if (!netname[1].length) circuit_map.set(netname[0], the_circuit);
